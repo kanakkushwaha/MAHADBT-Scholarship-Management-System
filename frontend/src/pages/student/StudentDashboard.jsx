@@ -11,14 +11,20 @@ const StudentDashboard = () => {
   const { user } = useContext(AuthContext);
   const { applications, documents, notifications } = useContext(AppDataContext);
 
-  const myApp = applications.find(a => a.studentId === user.id);
-  const myDocs = documents.filter(d => d.applicationId === myApp?.id);
-  const unreadCount = notifications.filter(n => !n.read && n.userId === user.id).length;
+  const myApp = applications.find(a => 
+    (a.studentId === user?.id || a.student_prn === user?.prn || a.studentId === user?.prn || a.student_prn === user?.id)
+  );
+  const myDocs = documents.filter(d => 
+    (d.applicationId === myApp?.id || d.application_id === myApp?.id || d.student_prn === user?.prn || d.student_prn === user?.id)
+  );
+  const unreadCount = notifications.filter(n => 
+    (!n.read && !n.is_read) && (n.userId === user?.id || n.studentPrn === user?.prn || n.student_prn === user?.prn || n.userId === 'all')
+  ).length;
 
   const docStats = {
     total: myDocs.length,
     verified: myDocs.filter(d => d.status === 'Verified').length,
-    pending: myDocs.filter(d => d.status === 'Pending').length,
+    pending: myDocs.filter(d => d.status === 'Pending' || d.status === 'In Progress').length,
     correction: myDocs.filter(d => d.status === 'Correction Required').length,
   };
 

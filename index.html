@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAHADBT Scholarship Management System</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+    body { background: #f8fafc; color: #1e293b; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); padding: 40px; max-width: 520px; width: 100%; text-align: center; }
+    h1 { color: #1e40af; font-size: 24px; margin-bottom: 8px; }
+    p { color: #64748b; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+    .badge { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
+    .btn { display: inline-block; background: #2563eb; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+    .btn:hover { background: #1d4ed8; }
+    .instruction { background: #f1f5f9; border-radius: 8px; padding: 16px; margin-top: 24px; text-align: left; font-size: 13px; color: #334155; }
+    .instruction strong { color: #0f172a; }
+    .code { font-family: monospace; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; }
+    .creds { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 16px; text-align: left; font-size: 12px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">Full-Stack Prototype</div>
+    <h1>MAHADBT Scholarship Portal</h1>
+    <p>Connected to <strong>MySQL Database (`mahadbt_db`)</strong> & Node.js Express Backend.</p>
+
+    <a href="http://localhost:5000" class="btn" id="launchBtn">Open Application Portal</a>
+
+    <div class="instruction">
+      <strong>To Start the Live Server:</strong>
+      <ol style="margin-left: 20px; margin-top: 8px; line-height: 1.8;">
+        <li>Double-click <span class="code">start_all.bat</span> in this folder.</li>
+        <li>Or click the button above if already running on port 5000.</li>
+      </ol>
+    </div>
+
+    <div class="creds">
+      <strong>Demo Credentials:</strong><br>
+      Student: <span class="code">student@demo.com</span> / <span class="code">student123</span><br>
+      Admin: <span class="code">admin@demo.com</span> / <span class="code">admin123</span>
+    </div>
+  </div>
+
+  <script>
+    // Auto redirect if server is already running on port 5000
+    fetch('http://localhost:5000/api/stats')
+      .then(res => {
+        if (res.ok) {
+          window.location.href = 'http://localhost:5000';
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

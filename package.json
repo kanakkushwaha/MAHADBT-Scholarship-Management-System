@@ -1,0 +1,9 @@
+{
+  "name": "mahadbt-scholarship-management-system",
+  "version": "1.0.0",
+  "description": "MAHADBT Scholarship Management and Tracking System (React + Node.js + MySQL)",
+  "scripts": {
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm start --prefix backend"
+  }
+}

@@ -108,9 +108,12 @@ const AdminDashboard = () => {
                 {recentApps.map(app => (
                   <tr key={app.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/admin/applications/${app.id}`)}>
                     <td style={{ fontWeight: '500', color: 'var(--color-primary)' }}>{app.id}</td>
-                    <td>{app.studentName}</td>
+                    <td>
+                      <div style={{ fontWeight: 500 }}>{app.studentName || app.student_name}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{app.department}</div>
+                    </td>
                     <td><StatusBadge status={app.status} /></td>
-                    <td>{new Date(app.lastUpdated).toLocaleDateString()}</td>
+                    <td>{new Date(app.lastUpdated || app.last_updated || app.submittedDate || Date.now()).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

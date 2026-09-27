@@ -9,27 +9,29 @@ const ApplicationForm = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const existingApp = applications.find(a => a.studentId === user.id);
+  const existingApp = applications.find(a => 
+    (a.studentId === user?.id || a.student_prn === user?.prn || a.studentId === user?.prn || a.student_prn === user?.id)
+  );
 
   const [formData, setFormData] = useState({
     scholarshipName: 'Post-Matric Scholarship',
     category: 'OBC',
     income: '150000',
-    aadhaar: '123456789012',
-    bankAccount: '1234567890',
+    aadhaar: '789012345678',
+    bankAccount: '123456789012',
     ifsc: 'SBIN0001234'
   });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const id = submitApplication({
-      studentId: user.id,
-      studentName: user.name,
-      department: 'Information Technology', // mock fixed for demo
-      year: 'Third Year',
-      academicYear: '2025-2026',
+    const id = await submitApplication({
+      studentId: user?.prn || user?.id || 'STU2026001',
+      studentName: user?.name || 'Sharvari Bangar',
+      department: user?.department || 'Information Technology',
+      year: user?.year || 'Third Year',
+      academicYear: user?.academicYear || '2025-2026',
       scholarshipName: formData.scholarshipName
     });
     navigate('/student/acknowledgement', { state: { appId: id } });
@@ -39,17 +41,28 @@ const ApplicationForm = () => {
     return (
       <Layout>
         <div className="card">
-          <h2>My Application</h2>
-          <p style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }}>You have already submitted an application.</p>
-          <div className="grid grid-cols-2 gap-4" style={{ backgroundColor: 'var(--color-bg)', padding: '16px', borderRadius: '8px' }}>
-            <div><span style={{color:'var(--color-text-muted)'}}>Application ID:</span> <strong>{existingApp.id}</strong></div>
-            <div><span style={{color:'var(--color-text-muted)'}}>Scholarship:</span> <strong>{existingApp.scholarshipName}</strong></div>
-            <div><span style={{color:'var(--color-text-muted)'}}>Status:</span> <strong>{existingApp.status}</strong></div>
-            <div><span style={{color:'var(--color-text-muted)'}}>Submitted On:</span> <strong>{new Date(existingApp.submittedDate).toLocaleDateString()}</strong></div>
+          <h2>My Scholarship Application</h2>
+          <p style={{ color: 'var(--color-text-muted)', marginBottom: '16px' }}>
+            You have an active scholarship application registered in the portal for Academic Year 2025-26.
+          </p>
+          <div className="grid grid-cols-2 gap-4" style={{ backgroundColor: 'var(--color-bg)', padding: '20px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+            <div><span style={{ color: 'var(--color-text-muted)', fontSize: '13px', display: 'block' }}>Application ID:</span> <strong style={{ fontSize: '16px', color: 'var(--color-primary)' }}>{existingApp.id}</strong></div>
+            <div><span style={{ color: 'var(--color-text-muted)', fontSize: '13px', display: 'block' }}>Scholarship Scheme:</span> <strong>{existingApp.scholarshipName || existingApp.scholarship_name}</strong></div>
+            <div><span style={{ color: 'var(--color-text-muted)', fontSize: '13px', display: 'block' }}>Current Status:</span> <strong>{existingApp.status}</strong></div>
+            <div><span style={{ color: 'var(--color-text-muted)', fontSize: '13px', display: 'block' }}>Submitted On:</span> <strong>{new Date(existingApp.submittedDate || existingApp.submitted_date || Date.now()).toLocaleDateString()}</strong></div>
           </div>
-          <button className="btn btn-primary" style={{ marginTop: '16px' }} onClick={() => navigate('/student/track')}>
-            Track Status
-          </button>
+          
+          <div style={{ marginTop: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={() => navigate('/student/track')}>
+              Track Application Timeline
+            </button>
+            <button className="btn btn-secondary" onClick={() => navigate('/student/documents')}>
+              Manage / View Documents
+            </button>
+            <button className="btn btn-secondary" onClick={() => navigate('/student/acknowledgement')}>
+              View Acknowledgement Receipt
+            </button>
+          </div>
         </div>
       </Layout>
     );
