@@ -47,11 +47,23 @@ app.post('/api/auth/login', async (req, res) => {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
+  const cleanIdentifier = String(email || '').trim().toLowerCase();
+  const cleanPass = String(password || '').trim();
+  const rawHandle = cleanIdentifier.replace(/@.*$/, '').replace(/[\s._-]/g, '');
+
   try {
-    // 1. Check Student Table
+    // 1. Check Student Table (supports email, PRN, full name alias, first name)
     const [students] = await pool.query(
-      'SELECT * FROM students WHERE email = ? AND password = ?',
-      [email, password]
+      `SELECT * FROM students 
+       WHERE (
+         LOWER(TRIM(email)) = ? 
+         OR LOWER(TRIM(prn)) = ?
+         OR LOWER(REPLACE(email, '@demo.com', '')) = ?
+         OR LOWER(REPLACE(name, ' ', '')) = ?
+         OR LOWER(SUBSTRING_INDEX(name, ' ', 1)) = ?
+         OR ? LIKE CONCAT('%', LOWER(SUBSTRING_INDEX(name, ' ', 1)), '%')
+       ) AND password = ?`,
+      [cleanIdentifier, cleanIdentifier, rawHandle, rawHandle, rawHandle, cleanIdentifier, cleanPass]
     );
 
     if (students.length > 0) {
@@ -73,8 +85,15 @@ app.post('/api/auth/login', async (req, res) => {
 
     // 2. Check Administrator Table
     const [admins] = await pool.query(
-      'SELECT * FROM administrators WHERE email = ? AND password = ?',
-      [email, password]
+      `SELECT * FROM administrators 
+       WHERE (
+         LOWER(TRIM(email)) = ?
+         OR LOWER(REPLACE(email, '@demo.com', '')) = ?
+         OR LOWER(REPLACE(name, ' ', '')) = ?
+         OR LOWER(SUBSTRING_INDEX(name, ' ', 1)) = ?
+         OR ? LIKE CONCAT('%', LOWER(SUBSTRING_INDEX(name, ' ', 1)), '%')
+       ) AND password = ?`,
+      [cleanIdentifier, rawHandle, rawHandle, rawHandle, cleanIdentifier, cleanPass]
     );
 
     if (admins.length > 0) {

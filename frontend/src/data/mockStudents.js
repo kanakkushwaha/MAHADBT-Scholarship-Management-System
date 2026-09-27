@@ -30,5 +30,21 @@ export const mockStudents = [
     department: "Mechanical",
     year: "First Year",
     phone: "9876543213"
+  },
+  {
+    id: "STU2026005",
+    name: "Priya Sharma",
+    email: "priya@demo.com",
+    department: "Information Technology",
+    year: "Final Year",
+    phone: "9876543214"
+  },
+  {
+    id: "STU2026006",
+    name: "Vikram Singh",
+    email: "vikram@demo.com",
+    department: "Computer Engineering",
+    year: "Second Year",
+    phone: "9876543215"
   }
 ];
